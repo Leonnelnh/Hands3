@@ -31,13 +31,13 @@ public class Tabla {
         this.fa = new int[k];
         this.fra = new double[k];
 
-        contarFrecuenciasAbsolutas();
-        calcularFrecuenciasBasicas();
-        calcularFrecuenciasExtendidas();
-        calcularMedidasTendenciaCentral();
+        contarFrecuencias();
+        calcularFrecuenciaR();
+        calcularHands4();
+        calcularHands5();
     }
 
-    private void contarFrecuenciasAbsolutas() {
+    private void contarFrecuencias() {
         for (int i = 0; i < k; i++) {
             double limiteInferior = min + (i * a);
             double limiteSuperior = min + ((i + 1) * a);
@@ -57,7 +57,7 @@ public class Tabla {
         }
     }
 
-    private void calcularFrecuenciasBasicas() {
+    private void calcularFrecuenciaR() {
         double sumaFr = 0;
 
         for (int i = 0; i < k; i++) {
@@ -69,7 +69,7 @@ public class Tabla {
         if (Math.abs(sumaFr - 1.0) < 0.001) { sumaFr = 1.0; }
     }
 
-    private void calcularFrecuenciasExtendidas() {
+    private void calcularHands4() {
         int acumuladorF = 0;
         double acumuladorFr = 0.0;
 
@@ -91,7 +91,7 @@ public class Tabla {
         }
     }
 
-    private void calcularMedidasTendenciaCentral() {
+    private void calcularHands5() {
         double sumatoriaFXc = 0;
         for (int i = 0; i < k; i++) {
             sumatoriaFXc += f[i] * xc[i];
@@ -99,18 +99,18 @@ public class Tabla {
         this.media = sumatoriaFXc / n;
 
         double nMedios = n / 2.0;
-        int claseMedianaIndex = -1;
+        int Mediana = -1;
         for (int i = 0; i < k; i++) {
             if (fa[i] >= nMedios) {
-                claseMedianaIndex = i;
+                Mediana = i;
                 break;
             }
         }
 
-        if (claseMedianaIndex != -1) {
-            double Li = min + (claseMedianaIndex * a);
-            int Fa_anterior = (claseMedianaIndex == 0) ? 0 : fa[claseMedianaIndex - 1];
-            int f_mediana = f[claseMedianaIndex];
+        if (Mediana != -1) {
+            double Li = min + (Mediana * a);
+            int Fa_anterior = (Mediana == 0) ? 0 : fa[Mediana - 1];
+            int f_mediana = f[Mediana];
 
             this.mediana = Li + (((nMedios - Fa_anterior) / f_mediana) * a);
         } else {
@@ -149,10 +149,10 @@ public class Tabla {
             totalPorcentaje += porcentaje[i];
         }
 
-        System.out.println("╔════════╤══════════════════╤═══════╤═══════╤═══════╤════════════╤════════════╤═════════╗");
-        System.out.printf("║ %-6s │ %-16s │ %-5s │ %-5s │ %-5s │ %-10s │ %-10s │ %-7s ║\n",
+        System.out.println("│--------│------------------│-------│-------│-------│------------│------------│---------│");
+        System.out.printf("│ %-6s │ %-16s │ %-5s │ %-5s │ %-5s │ %-10s │ %-10s │ %-7s │\n",
                 "Clase", "Lim C", "f", "Xc", "Fa", "fr", "fra", "%");
-        System.out.println("╠════════╪══════════════════╪═══════╪═══════╪═══════╪════════════╪════════════╪═════════╣");
+        System.out.println("│--------│------------------│-------│-------│-------│------------│------------│---------│");
 
 
         for (int i = 0; i < k; i++) {
@@ -169,23 +169,23 @@ public class Tabla {
 
             String clas = String.format("%d", i+1);
 
-            System.out.printf("║ %-6s │ %-16s │ %-5d │ %-5.2f │ %-5d │ %-10.4f │ %-10.4f │ %-7.2f ║\n",
+            System.out.printf("│ %-6s │ %-16s │ %-5d │ %-5.2f │ %-5d │ %-10.4f │ %-10.4f │ %-7.2f │\n",
                     clas, limc, f[i], xc[i], fa[i], fr[i], fra[i], porcentaje[i]);
         }
 
-        System.out.println("╠════════╧══════════════════╧═══════╧═══════╧═══════╪════════════╪════════════╪═════════╣");
-        System.out.printf("║ %-49s │ %-10.4f │ %-10.4f │ %-7.2f ║\n",
+        System.out.println("│--------│------------------│-------│-------│-------│------------│------------│---------│");
+        System.out.printf("│ %-49s │ %-10.4f │ %-10.4f │ %-7.2f │\n",
                 "TOTAL", totalFr, fra[k-1], totalPorcentaje);
-        System.out.println("╚═══════════════════════════════════════════════════╧════════════╧════════════╧═════════╝");
+        System.out.println("│---------------------------------------------------│------------│------------│---------│");
     }
 
     public void imprimirTendenciaCentral() {
-        System.out.println("╔════════════════════════╤═══════════════════╗");
-        System.out.printf("║ %-22s │ %-17s ║\n", "MEDIDA", "VALOR");
-        System.out.println("╠════════════════════════╪═══════════════════╣");
-        System.out.printf("║ %-22s │ %-17.4f ║\n", "1. Media (Promedio)", media);
-        System.out.printf("║ %-22s │ %-17.4f ║\n", "2. Moda", moda);
-        System.out.printf("║ %-22s │ %-17.4f ║\n", "3. Mediana", mediana);
-        System.out.println("╚════════════════════════╧═══════════════════╝");
+        System.out.println("│--------------------------------------------│");
+        System.out.printf("│ %-22s │ %-17s │\n", "MEDIDA", "VALOR");
+        System.out.println("│--------------------------------------------│");
+        System.out.printf("│ %-22s │ %-17.4f │\n", "1. Media (Promedio)", media);
+        System.out.printf("│ %-22s │ %-17.4f │\n", "2. Moda", moda);
+        System.out.printf("│ %-22s │ %-17.4f │\n", "3. Mediana", mediana);
+        System.out.println("│--------------------------------------------│");
     }
 }
